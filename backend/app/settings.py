@@ -50,7 +50,7 @@ ENABLE_SILK = os.environ.get("ENABLE_SILK", "False").lower() == "true"
 # Proper ALLOWED_HOSTS configuration
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", 
-    "localhost,127.0.0.1,0.0.0.0"
+    "localhost,127.0.0.1,0.0.0.0,192.168.68.108"
 ).split(",")
 
 # CSRF_TRUSTED_ORIGINS = os.getenv(
@@ -60,7 +60,7 @@ ALLOWED_HOSTS = os.environ.get(
 # CSRF trusted origins for Docker setup
 CSRF_TRUSTED_ORIGINS = os.environ.get(
     "DJANGO_CSRF_TRUSTED_ORIGINS",
-    "http://localhost,http://127.0.0.1,http://0.0.0.0"
+    "http://localhost,http://127.0.0.1,http://0.0.0.0,http://192.168.68.108,http://192.168.68.108:80"
 ).split(",")
 
 MIKROTIK_URL = os.environ.get(
@@ -270,7 +270,7 @@ REST_FRAMEWORK = {
 # Proper CORS configuration for Docker setup
 CORS_ALLOWED_ORIGINS = os.environ.get(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost,http://127.0.0.1,http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://127.0.0.1:80"
+    "http://localhost,http://127.0.0.1,http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://127.0.0.1:80,http://192.168.68.108,http://192.168.68.108:80"
 ).split(",")
 
 # Only allow CORS_ALLOW_ALL_ORIGINS in development
@@ -291,15 +291,11 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-# CSRF Configuration for API
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost",
-    "http://127.0.0.1",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:80",
-    "http://127.0.0.1:80",
-]
+# CSRF Configuration for API - Use environment variables
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    "http://localhost,http://127.0.0.1,http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://127.0.0.1:80,http://192.168.68.108,http://192.168.68.108:80"
+).split(",")
 
 # CSRF exemption for API endpoints (since we're using JWT authentication)
 CSRF_EXEMPT_URLS = [
@@ -309,9 +305,10 @@ CSRF_EXEMPT_URLS = [
     r'^/dashboard.*$',  # Dashboard endpoint
 ]
 
-# CORS_ALLOWED_ORIGIN_REGEXES = [
-#     r"^http://localhost(:[0-9]+)?$",
-#     r"^http://127\\.0\\.0\\.1(:[0-9]+)?$",
-#     r"^http://192\\.168\\.[0-9]+\\.[0-9]+(:[0-9]+)?$",
-#     r"^http://10\\.[0-9]+\\.[0-9]+\\.[0-9]+(:[0-9]+)?$",
-# ]
+# CORS allowed origin regexes for better network support
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost(:[0-9]+)?$",
+    r"^http://127\.0\.0\.1(:[0-9]+)?$",
+    r"^http://192\.168\.68\.108(:[0-9]+)?$",
+    r"^http://10\.[0-9]+\.[0-9]+\.[0-9]+(:[0-9]+)?$",
+]
