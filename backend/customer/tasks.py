@@ -6,7 +6,7 @@ from customer.utils import toggle_ppp_user
 
 
 @shared_task
-def add(x, y):
+def add(x=10, y=20):
     return x + y
 
 
