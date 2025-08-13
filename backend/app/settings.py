@@ -325,3 +325,6 @@ accept_content = ["json"]
 task_serializer = "json"
 result_serializer = "json"
 timezone = "Asia/Dhaka"
+
+
+redis_url = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
