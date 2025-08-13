@@ -1,4 +1,4 @@
-
+celery[redis]
 dj-database-url
 Django
 django-cleanup
