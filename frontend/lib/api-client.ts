@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
           throw new Error('No refresh token available');
         }
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1'}/users/login/refresh`, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || '/api/v1'}/users/login/refresh`, {
           refresh_token: refreshToken,
         });
 

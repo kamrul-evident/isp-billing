@@ -50,7 +50,7 @@ ENABLE_SILK = os.environ.get("ENABLE_SILK", "False").lower() == "true"
 # Proper ALLOWED_HOSTS configuration
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", 
-    "localhost,127.0.0.1,0.0.0.0"
+    "localhost,127.0.0.1,0.0.0.0,192.168.68.108"
 ).split(",")
 
 # CSRF_TRUSTED_ORIGINS = os.getenv(
@@ -60,7 +60,7 @@ ALLOWED_HOSTS = os.environ.get(
 # CSRF trusted origins for Docker setup
 CSRF_TRUSTED_ORIGINS = os.environ.get(
     "DJANGO_CSRF_TRUSTED_ORIGINS",
-    "http://localhost,http://127.0.0.1,http://0.0.0.0"
+    "http://localhost,http://127.0.0.1,http://0.0.0.0,http://192.168.68.108,http://192.168.68.108:80"
 ).split(",")
 
 MIKROTIK_URL = os.environ.get(
@@ -270,7 +270,7 @@ REST_FRAMEWORK = {
 # Proper CORS configuration for Docker setup
 CORS_ALLOWED_ORIGINS = os.environ.get(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost,http://127.0.0.1,http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://127.0.0.1:80"
+    "http://localhost,http://127.0.0.1,http://localhost:3000,http://127.0.0.1:3000,http://localhost:80,http://127.0.0.1:80,http://192.168.68.108,http://192.168.68.108:80"
 ).split(",")
 
 # Only allow CORS_ALLOW_ALL_ORIGINS in development
@@ -299,6 +299,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:80",
     "http://127.0.0.1:80",
+    "http://192.168.68.108",
+    "http://192.168.68.108:80",
 ]
 
 # CSRF exemption for API endpoints (since we're using JWT authentication)
