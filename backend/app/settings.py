@@ -315,13 +315,13 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 
 # Celery Configurations
 # Use Redis as broker
-CELERY_BROKER_URL = "redis://localhost:6379/0"
+# CELERY_broker_url = "redis://localhost:6379/0"
 
 # Where to store task results
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+# result_backend = "redis://localhost:6379/0"
 
 # Optional: task settings
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TIMEZONE = "Asia/Dhaka"
+accept_content = ["json"]
+task_serializer = "json"
+result_serializer = "json"
+timezone = "Asia/Dhaka"

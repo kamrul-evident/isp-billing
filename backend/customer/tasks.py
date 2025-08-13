@@ -7,6 +7,7 @@ from customer.utils import toggle_ppp_user
 
 @shared_task
 def add(x=10, y=20):
+    print(f"{x} + {y} = {x+y}")
     return x + y
 
 
@@ -54,7 +55,7 @@ def deactivate_due_payment_customers():
         .filter(billing_month=month, paid=False)
         .select_related("customer")
     )
-    customers_to_updated = []
+    customers_to_update = []
     for payment in payments:
         customer = payment.customer
         # Deactive the customer
@@ -66,5 +67,5 @@ def deactivate_due_payment_customers():
             print(f"Error Message: ", msg)
 
     if customers_to_update:
-        Customer.objects.bulk_update(customers_to_updated)
+        Customer.objects.bulk_update(customers_to_update)
         print("Customer updated successfully!")
