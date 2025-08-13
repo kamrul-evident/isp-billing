@@ -58,13 +58,14 @@ def deactivate_due_payment_customers():
     customers_to_update = []
     for payment in payments:
         customer = payment.customer
+        if customer.is_active and not customer.is_free:
         # Deactive the customer
-        success, msg = toggle_ppp_user(username=customer.username, disable=True)
-        if success:
-            customer.is_active = False
-            customers_to_update.append(customer)
-        else:
-            print(f"Error Message: ", msg)
+            success, msg = toggle_ppp_user(username=customer.username, disable=True)
+            if success:
+                customer.is_active = False
+                customers_to_update.append(customer)
+            else:
+                print(f"Error Message: ", msg)
 
     if customers_to_update:
         Customer.objects.bulk_update(customers_to_update)
