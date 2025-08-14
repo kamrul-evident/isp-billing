@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Me, CustomerList, PaymentList } from '@/lib/types';
 import { authService, customerService, paymentService } from '@/lib/api-services';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<Me | null>(null);
@@ -26,6 +27,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      // Only run on client side
+      if (typeof window === 'undefined') return;
+      
       const token = localStorage.getItem('accessToken');
       if (!token) {
         router.push('/login');
@@ -137,30 +141,8 @@ export default function DashboardPage() {
   const showAdminDashboard = true; // Change this to isAdmin when ready
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">M_Online Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                Welcome, {user.first_name} {user.last_name}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <DashboardLayout allowedRoles={['ADMIN', 'SUPER_ADMIN', 'MANAGER', 'STAFF', 'CUSTOMER']}>
+      <div className="space-y-6">
         {/* Role-based content */}
         {showAdminDashboard ? (
           <div className="space-y-6">
@@ -522,6 +504,6 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

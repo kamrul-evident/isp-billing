@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CustomerDetail, CustomerList, PaginatedResponse } from '@/lib/types';
@@ -31,8 +31,16 @@ export default function PaymentCreatePage() {
     try {
       setLoading(true);
       let filters: any = {};
-      if (searchName) filters.name = searchName;
-      if (searchPhone) filters.phone = searchPhone;
+      if (searchName.trim()) filters.name = searchName.trim();
+      if (searchPhone.trim()) filters.phone = searchPhone.trim();
+      
+      // Only search if we have at least one filter
+      if (!searchName.trim() && !searchPhone.trim()) {
+        setCustomers([]);
+        setLoading(false);
+        return;
+      }
+      
       const response: PaginatedResponse<CustomerList> = await customerService.getCustomers(1, 20, filters);
       setCustomers(
         (response.results || []).map((customer) => ({
@@ -46,6 +54,13 @@ export default function PaymentCreatePage() {
       alert('Could not load customers. Please try again.');
     } finally {
       setLoading(false);
+    }
+  }, [searchName, searchPhone]);
+
+  // Clear customers when both search fields are empty
+  useEffect(() => {
+    if (!searchName.trim() && !searchPhone.trim()) {
+      setCustomers([]);
     }
   }, [searchName, searchPhone]);
 
@@ -141,28 +156,47 @@ export default function PaymentCreatePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-white shadow rounded-lg p-8 w-full max-w-xl">
           <h2 className="text-lg font-medium text-gray-900 mb-4">Search Customer</h2>
+          <p className="text-sm text-gray-600 mb-4">Enter customer name or phone number, then press Enter or click Search to find customers.</p>
           <div className="flex flex-col gap-4 mb-4">
             <input
               type="text"
-              placeholder="Customer Name"
+              placeholder="Customer Name (e.g., John Doe)"
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white text-gray-900"
+              onKeyPress={(e) => e.key === 'Enter' && fetchCustomers()}
+              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 transition-colors"
+              autoComplete="off"
             />
             <input
               type="text"
-              placeholder="Phone Number"
+              placeholder="Phone Number (e.g., 01712345678)"
               value={searchPhone}
               onChange={(e) => setSearchPhone(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white text-gray-900"
+              onKeyPress={(e) => e.key === 'Enter' && fetchCustomers()}
+              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 transition-colors"
+              autoComplete="off"
             />
-            <button
-              onClick={fetchCustomers}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-              type="button"
-            >
-              Search
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={fetchCustomers}
+                disabled={!searchName.trim() && !searchPhone.trim()}
+                className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                type="button"
+              >
+                Search Now
+              </button>
+              <button
+                onClick={() => {
+                  setSearchName('');
+                  setSearchPhone('');
+                  setCustomers([]);
+                }}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
           </div>
           <div className="border border-gray-200 rounded-md max-h-96 overflow-y-auto">
             {loading ? (
@@ -175,7 +209,7 @@ export default function PaymentCreatePage() {
                   <li
                     key={customer.uid}
                     onClick={() => handleCustomerSelect(customer)}
-                    className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                    className="p-4 hover:bg-indigo-50 cursor-pointer transition-colors border-l-4 border-transparent hover:border-indigo-500"
                   >
                     <div className="flex justify-between">
                       <div>
@@ -184,6 +218,7 @@ export default function PaymentCreatePage() {
                         {customer.email && (
                           <p className="text-xs text-gray-400">{customer.email}</p>
                         )}
+                        <p className="text-xs text-indigo-600 mt-1">Click to select →</p>
                       </div>
                       {customer.package && (
                         <div className="text-right">
@@ -197,8 +232,16 @@ export default function PaymentCreatePage() {
                   </li>
                 ))}
               </ul>
+            ) : (searchName.trim() || searchPhone.trim()) ? (
+              <p className="p-4 text-center text-gray-500">
+                No customers found matching your search criteria.
+                <br />
+                <span className="text-xs text-gray-400">Try different search terms or check spelling.</span>
+              </p>
             ) : (
-              <p className="p-4 text-center text-gray-500">No customers found.</p>
+              <p className="p-4 text-center text-gray-400">
+                Enter a customer name or phone number above to search.
+              </p>
             )}
           </div>
         </div>

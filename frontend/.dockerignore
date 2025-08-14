@@ -3,6 +3,10 @@ Dockerfile
 node_modules
 npm-debug.log
 README.md
-.next
 .git
 .husky
+# Exclude .next except for the built standalone and static files
+.next/*
+!.next/standalone
+!.next/static
+!.next/server

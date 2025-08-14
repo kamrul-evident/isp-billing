@@ -33,21 +33,35 @@ export const authService = {
     return response.data;
   },
   getCurrentUser: async (): Promise<Me> => {
+    if (typeof window === 'undefined') {
+      // Server-side: return default user
+      return {phone: '', email: '', first_name: '', last_name: '', gender: 'UNKNOWN', image: '', kind: 'CUSTOMER'};
+    }
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : {phone: '', email: '', first_name: '', last_name: '', gender: 'UNKNOWN', image: '', kind: 'CUSTOMER'};
   },
   getCurrentUserSync: (): Me => {
+    if (typeof window === 'undefined') {
+      // Server-side: return default user
+      return {phone: '', email: '', first_name: '', last_name: '', gender: 'UNKNOWN', image: '', kind: 'CUSTOMER'};
+    }
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : {phone: '', email: '', first_name: '', last_name: '', gender: 'UNKNOWN', image: '', kind: 'CUSTOMER'};
   },
   hasPermission: (allowedRoles: string[]): boolean => {
+    if (typeof window === 'undefined') {
+      // Server-side: allow all permissions to prevent build errors
+      return true;
+    }
     const user = authService.getCurrentUserSync();
     return allowedRoles.includes(user.kind || 'CUSTOMER');
   },
   logout: () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+    }
   }
 };
 
