@@ -76,6 +76,8 @@ services:
   nextjs:
     build: ./frontend
     container_name: nextjs
+    expose:
+      - "3000"
     networks:
       - billing-network
     environment:
