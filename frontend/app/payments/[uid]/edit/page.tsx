@@ -13,7 +13,7 @@ export default function PaymentEditPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
   const params = useParams();
-  const uid = params.uid as string;
+  const uid = params?.uid as string;
 
   const [formData, setFormData] = useState({
     amount: '',

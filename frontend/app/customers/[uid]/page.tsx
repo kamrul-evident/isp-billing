@@ -15,7 +15,7 @@ export default function CustomerDetailPage() {
   const [allPaymentsLoading, setAllPaymentsLoading] = useState(true);
 
   const params = useParams();
-  const uid = params.uid as string;
+  const uid = params?.uid as string;
 
   const fetchCustomerData = useCallback(async () => {
     try {

@@ -32,7 +32,7 @@ export default function EditCustomerPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
   const params = useParams();
-  const uid = params.uid as string;
+  const uid = params?.uid as string;
 
   const fetchData = useCallback(async () => {
     try {

@@ -19,7 +19,7 @@ export default function EditPackagePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
   const params = useParams();
-  const uid = params.uid as string;
+  const uid = params?.uid as string;
 
   useEffect(() => {
     fetchPackage();

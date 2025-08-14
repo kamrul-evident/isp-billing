@@ -20,7 +20,7 @@ export default function CustomerPaymentsPage() {
   const [pageSize, setPageSize] = useState(20);
   const router = useRouter();
   const params = useParams();
-  const uid = params.uid as string;
+  const uid = params?.uid as string;
 
   const fetchData = useCallback(async () => {
     try {

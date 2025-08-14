@@ -11,7 +11,7 @@ export default function PaymentDetailPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const params = useParams();
-  const uid = params.uid as string;
+  const uid = params?.uid as string;
 
   useEffect(() => {
     fetchPaymentData();
