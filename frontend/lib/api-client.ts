@@ -54,9 +54,10 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
         
-        // Only redirect if we're not already on the login page
-        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
+        // Let AuthGuard handle the redirect by triggering a re-render
+        // Dispatch a custom event that AuthGuard can listen to
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('auth-failed'));
         }
         return Promise.reject(error);
       }

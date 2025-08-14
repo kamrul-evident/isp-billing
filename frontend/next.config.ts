@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['*'],
   // basePath: '/frontend', // to use as localhost/frontend
   output: 'standalone',
+  // Ensure proper SPA behavior in standalone mode
+  trailingSlash: false,
 };
 
 export default nextConfig;
