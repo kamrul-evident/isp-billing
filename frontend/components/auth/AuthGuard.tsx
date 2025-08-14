@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter, usePathname } from 'next/navigation'
 import { authService } from '@/lib/api-services'
 
 type AuthGuardProps = {
@@ -9,11 +9,12 @@ type AuthGuardProps = {
 
 export default function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const user = authService.getCurrentUserSync()
 
   useEffect(() => {
     // If no user is logged in and we're not on the login page
-    if (!user && router.pathname !== '/login') {
+    if (!user && pathname !== '/login') {
       router.push('/login')
       return
     }
@@ -22,10 +23,10 @@ export default function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
     if (allowedRoles && !authService.hasPermission(allowedRoles)) {
       router.push('/dashboard')
     }
-  }, [router.pathname, allowedRoles]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pathname, allowedRoles, user, router]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // If we're on the login page and user is logged in, redirect to dashboard
-  if (user && router.pathname === '/login') {
+  if (user && pathname === '/login') {
     router.push('/dashboard')
     return null
   }
